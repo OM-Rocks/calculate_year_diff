@@ -1,0 +1,108 @@
+<html>
+<head>
+<script type="text/javascript">
+	var YearDiffModule = (function() {
+		var days = 0, yeardiff = 0 ;
+		
+		function isLeapYear(year) {
+			return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0); 
+		}
+		
+		function datediff(first, second) { 
+			return Math.round((second-first)/(1000*60*60*24));
+		}
+		
+		function calculateStartDiffDays(date) {
+			var startyear = 0, nextyear = 0, isLeap, days1, d, nxtyrdate;  				
+			startyear = date.getFullYear();		
+			nextyear = date.getFullYear() + 1; 
+			
+			nxtyrdate = new Date(`1/1/${nextyear}`);
+			isLeap = isLeapYear(startyear);
+			if(isLeap) {
+				d = 366;	
+			} else {
+				d = 365;	
+			}
+			days1 = datediff(date, nxtyrdate);
+			if( days1%d == 0 ) {
+				yeardiff++;
+				days1 = 0;
+			} else {
+				days1 = days1 % d;
+			}
+			return days1;		
+		}
+			
+		function calculateEndDiffDays(date) {
+			var lastyear = 0,endyear = 0, isLeap, days2, d, prevyrdate;  				
+			lastyear = date.getFullYear();		
+			prevyear = date.getFullYear() - 1; 
+			
+			prevyrdate = new Date(`1/1/${prevyear}`);
+			isLeap = isLeapYear(lastyear);
+			if(isLeap) {
+				d = 366;	
+			} else {
+				d = 365;	
+			}
+			days2 = datediff(prevyrdate, date);
+			if( days2%d == 0 ) {
+				yeardiff++;
+				days2 = 0;
+			} else {
+				days2 = days2 % d;
+			}
+			return days2;
+		}
+		
+		return {
+			calculateYears:function(startdate, enddate) {
+				var days1, days2, yeardiff;
+				days1 = calculateStartDiffDays(startdate);
+				days2 = calculateEndDiffDays(enddate);
+				yeardiff = (enddate.getFullYear() - startdate.getFullYear() - 1) + ((days1+days2)/365);		
+				return yeardiff;
+			}	
+		}   
+	}());
+
+	
+	function validateDate(d) {
+		var month, date, year;
+		month = d.split('/')[0];
+		date = d.split('/')[1];
+		year = d.split('/')[2];
+	
+		if(month.length == 0 || month.length > 2 || (+month) < 0 || (+month) > 12) {
+			alert('Enter valid month');
+			return false;
+		}
+		
+		if(date.length == 0 || date.length > 2 || (+date) < 0 || (+date) > 31) {
+			alert('Enter valid date');
+			return false;
+		}
+		if(year.length == 0 || year.length != 4 || (+year) < 0) {
+			alert('Enter valid year');
+			return false;
+		}
+		return true;			
+	}
+
+	function calculateNow() {
+		if(validateDate(d1.value) && validateDate(d2.value)) { 
+			 alert(YearDiffModule.calculateYears(new Date(d1.value), new Date(d2.value))); 
+		} 
+		
+	}	
+</script>
+</head>
+<body>
+<!-- <button width='120' height='130' onclick="calculateYearDiff(new Date('3/3/1990'),new Date('3/3/2006'))">IOIIOIOIOIO</button>  -->
+
+<input type='text' id='d1' width='200' placeholder='Enter format in mm/dd/yyyy'>
+<input type='text' id='d2' width='200' placeholder='Enter format in mm/dd/yyyy'>
+<button width='120' height='130' onclick="calculateNow(d1, d2);">calculate</button>
+</body>
+</html>
