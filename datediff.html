@@ -2,7 +2,7 @@
 <head>
 <script type="text/javascript">
 	var YearDiffModule = (function() {
-		var days = 0, yeardiff = 0 ;
+		var days = 0, _yeardiff = 0;
 		
 		function isLeapYear(year) {
 			return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0); 
@@ -13,7 +13,8 @@
 		}
 		
 		function calculateStartDiffDays(date) {
-			var startyear = 0, nextyear = 0, isLeap, days1, d, nxtyrdate;  				
+			var startyear = 0, nextyear = 0, isLeap, days1, d, nxtyrdate; 
+			_yeardiff = 0;  				
 			startyear = date.getFullYear();		
 			nextyear = date.getFullYear() + 1; 
 			
@@ -26,7 +27,7 @@
 			}
 			days1 = datediff(date, nxtyrdate);
 			if( days1%d == 0 ) {
-				yeardiff++;
+				_yeardiff += 1;
 				days1 = 0;
 			} else {
 				days1 = days1 % d;
@@ -42,13 +43,13 @@
 			prevyrdate = new Date(`1/1/${prevyear}`);
 			isLeap = isLeapYear(lastyear);
 			if(isLeap) {
-				d = 366;	
+				d = 365;	
 			} else {
 				d = 365;	
 			}
 			days2 = datediff(prevyrdate, date);
 			if( days2%d == 0 ) {
-				yeardiff++;
+				//_yeardiff += 1;
 				days2 = 0;
 			} else {
 				days2 = days2 % d;
@@ -61,7 +62,7 @@
 				var days1, days2, yeardiff;
 				days1 = calculateStartDiffDays(startdate);
 				days2 = calculateEndDiffDays(enddate);
-				yeardiff = (enddate.getFullYear() - startdate.getFullYear() - 1) + ((days1+days2)/365);		
+				yeardiff =  _yeardiff + (enddate.getFullYear() - startdate.getFullYear() - 1) + ((days1+days2)/365);		
 				return yeardiff;
 			}	
 		}   
